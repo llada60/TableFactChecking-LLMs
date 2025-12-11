@@ -12,11 +12,10 @@ def load_json(file_path):
     return data
 
 if __name__ == "__main__":
-    model_name = "deepseek-ai/DeepSeek-V2-Lite"
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, torch_dtype=torch.bfloat16).cuda()
-    model.generation_config = GenerationConfig.from_pretrained(model_name)
-    model.generation_config.pad_token_id = model.generation_config.eos_token_id
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+    model_name = "meta-llama/Llama-3.2-3B-Instruct"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name)
     
     json = load_json('./data/test_examples_with_csv.json')
     prompt = """
@@ -36,12 +35,14 @@ if __name__ == "__main__":
         table = value[3]
         total += len(statements)
         pbar.set_description(f"acc:{correct}/{total}")
+        
         for statement, label in zip(statements, labels):
             text = prompt.format(statement=statement, table=table, table_title=table_title)
             inputs = tokenizer(text, return_tensors='pt').to(model.device)
             input_size = inputs['input_ids'].shape[-1]
             outputs = model.generate(**inputs, max_new_tokens=100)
             output_text = tokenizer.decode(outputs[0][input_size:], skip_special_tokens=True)
+            # it will output 1. supported. 2. refuted. Answer: ... (hard to directly parse)
             print(output_text)
             if "support" in output_text.lower():
                 pred_label = True
@@ -49,6 +50,7 @@ if __name__ == "__main__":
                 pred_label = False
             else:
                 pred_label = None
+                
             if pred_label == label:
                 correct += 1
             elif pred_label is not None:
