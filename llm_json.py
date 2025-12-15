@@ -86,14 +86,15 @@ if __name__ == "__main__":
             })
             try:
                 output_text = parser.parse(result)
+                output_text = output_text['answer']
             except:
                 output_text = result
                 
             pred = None
             if(output_text is not None):
-                if "support" in output_text['answer'].lower():
+                if "support" in output_text.lower():
                     pred = True
-                elif "refute" in output_text['answer'].lower():
+                elif "refute" in output_text.lower():
                     pred = False
                 
             if pred == label:
