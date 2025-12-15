@@ -1,11 +1,14 @@
 from langchain_core.output_parsers import PydanticOutputParser, JsonOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_huggingface import HuggingFacePipeline
-from tqdm import tqdm
+
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, pipeline
-import json
+
 from pydantic import BaseModel
 from typing import Literal
+from tqdm import tqdm
+import json
+import argparse
 
 
 def load_json(file_path):
@@ -19,22 +22,28 @@ class ResponseSchema(BaseModel):
     
 
 if __name__ == "__main__":
-    model_name = "Qwen/Qwen2.5-7B-Instruct-1M"
-    # model_name = "Qwen/Qwen3-1.7B"
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_path', type=str, default='./data/test_examples_with_csv.json', help='Path to the input JSON data file')
+    parser.add_argument('--model_name', type=str, default='Qwen/Qwen2.5-7B-Instruct-1M', help='Name of the pre-trained model to use')
+    parser.add_argument('--max_new_tokens', type=int, default=10, help='Maximum number of new tokens to generate')
+    parser.add_argument('--temperature', type=float, default=0.0, help='Temperature for text generation')
+    args = parser.parse_args()
+    
+    model_name = args.model_name
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     llm = AutoModelForCausalLM.from_pretrained(model_name)
     hf_pipe = pipeline(
         "text-generation",
         model=llm,
         tokenizer=tokenizer,
-        temperature=0.0,
-        max_new_tokens=16,
+        temperature=args.temperature,
+        max_new_tokens=args.max_new_tokens,
         do_sample=False,
         return_full_text=False,
     )
     hf_llm = HuggingFacePipeline(pipeline=hf_pipe)
     
-    datas = load_json('./data/test_examples_with_csv.json')
+    datas = load_json(args.data_path)
     pbar = tqdm(datas.items())
     
     parser = JsonOutputParser(pydantic_object=ResponseSchema)
@@ -57,7 +66,7 @@ if __name__ == "__main__":
         input_variables = ["statement", "table_title", "table"],
         partial_variables={"format_instructions": parser.get_format_instructions()}
     )
-    chain = prompt | hf_llm | parser
+    chain = prompt | hf_llm
     
     correct = 0
     wrong = 0
@@ -70,18 +79,22 @@ if __name__ == "__main__":
         pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
         total += len(statements)
         for statement, label in zip(statements, labels):
-            output_text = chain.invoke({
+            result = chain.invoke({
                 "statement": statement,
                 "table_title": table_title,
                 "table": table
             })
+            try:
+                output_text = parser.parse(result)
+            except:
+                output_text = result
+                
+            pred = None
             if(output_text is not None):
                 if "support" in output_text['answer'].lower():
                     pred = True
                 elif "refute" in output_text['answer'].lower():
                     pred = False
-            else:
-                pred = None
                 
             if pred == label:
                 correct += 1
