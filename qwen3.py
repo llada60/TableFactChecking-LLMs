@@ -1,21 +1,37 @@
 import json
 import os
-from openai import OpenAI
 import torch
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
-
+import outlines
+from pydantic import BaseModel, Field
+from typing import Literal
 
 def load_json(file_path):
     with open(file_path, 'r') as f:
         data = json.load(f)
     return data
 
+class ResponseWithoutReasoning(BaseModel):
+    answer: Literal["Supported", "Refuted"]
+
+class ResponseWithReasoning(BaseModel):
+    reasoning: str
+    answer: Literal["Supported", "Refuted"]
+
 if __name__ == "__main__":
-    from transformers import AutoTokenizer, AutoModelForCausalLM
     model_name = "Qwen/Qwen2.5-7B-Instruct-1M"
+    # llm_name = "Qwen/Qwen3-1.7B"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name)
+    llm = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        torch_dtype=torch.float16,  
+        device_map="cuda"           
+    )
+    model = outlines.from_transformers(
+        llm,
+        tokenizer
+    )
     
     json = load_json('./data/test_examples_with_csv.json')
     prompt = """
@@ -38,15 +54,12 @@ if __name__ == "__main__":
         
         for statement, label in zip(statements, labels):
             text = prompt.format(statement=statement, table=table, table_title=table_title)
-            inputs = tokenizer(text, return_tensors='pt').to(model.device)
-            input_size = inputs['input_ids'].shape[-1]
-            outputs = model.generate(**inputs, max_new_tokens=100)
-            output_text = tokenizer.decode(outputs[0][input_size:], skip_special_tokens=True)
+            outputs = model.generate(text, schema=ResponseWithoutReasoning, max_new_tokens=250)
             # it will output 1. supported. 2. refuted. Answer: ... (hard to directly parse)
-            print(output_text)
-            if "support" in output_text.lower():
+            print(outputs)
+            if "support" in outputs['answer'].lower():
                 pred_label = True
-            elif "refute" in output_text.lower():
+            elif "refute" in outputs['answer'].lower():
                 pred_label = False
             else:
                 pred_label = None

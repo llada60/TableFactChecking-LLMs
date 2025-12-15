@@ -15,7 +15,7 @@ if __name__ == "__main__":
     from transformers import AutoTokenizer, AutoModelForCausalLM
     model_name = "meta-llama/Llama-3.2-3B-Instruct"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name).cuda()
     
     json = load_json('./data/test_examples_with_csv.json')
     prompt = """

@@ -89,6 +89,8 @@ if __name__ == "__main__":
                 output_text = output_text['answer']
             except:
                 output_text = result
+                print("table: ", table)
+                print("Parsing error for statement:", statement)
                 
             pred = None
             if(output_text is not None):
@@ -96,9 +98,9 @@ if __name__ == "__main__":
                     pred = True
                 elif "refute" in output_text.lower():
                     pred = False
-                
+            else: continue
             if pred == label:
                 correct += 1
             else:
                 wrong += 1
-    print(f"Final Accuracy: {correct}/{total}, wrong:{wrong}")
+    # print(f"Final Accuracy: {correct}/{total}, wrong:{wrong}")
