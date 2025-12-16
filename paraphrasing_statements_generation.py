@@ -37,7 +37,7 @@ if __name__ == "__main__":
     hf_llm = HuggingFacePipeline(pipeline=hf_pipe)
     
     data = load_json('./data/test_examples_with_csv.json')
-    pbar = tqdm(enumerate(data.items()))
+    pbar = tqdm(enumerate(data.items()), total=len(data))
     
     parser = JsonOutputParser(pydantic_object=StatementSchema)
     
