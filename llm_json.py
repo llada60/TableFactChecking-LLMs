@@ -23,7 +23,7 @@ class ResponseSchema(BaseModel):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_path', type=str, default='./data/test_examples_with_csv.json', help='Path to the input JSON data file')
+    parser.add_argument('--data_path', type=str, default='./data/flattened_test_examples_with_csv.json', help='Path to the input JSON data file')
     parser.add_argument('--model_name', type=str, default='Qwen/Qwen2.5-7B-Instruct-1M', help='Name of the pre-trained model to use')
     parser.add_argument('--max_new_tokens', type=int, default=10, help='Maximum number of new tokens to generate')
     parser.add_argument('--temperature', type=float, default=0.0, help='Temperature for text generation')
