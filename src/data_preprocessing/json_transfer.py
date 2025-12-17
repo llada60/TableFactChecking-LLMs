@@ -5,6 +5,8 @@ from langchain_core.prompts import PromptTemplate
 from pydantic import BaseModel
 from typing import Literal
 import json
+import argparse
+import os
 
 def json2dicList(file_path):
     with open(file_path, 'r') as f:
@@ -51,14 +53,22 @@ class ResponseSchema(BaseModel):
     
     
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_path', type=str, default='../../data/test_examples_with_csv_paraphrased.json', help='Path to the input JSON data file')
+    parser.add_argument('--prompt_type', type=str, default='direct_prompt', help='Type of prompt to generate: single or multi')
+    parser.add_argument('--model_name', type=str, default='Qwen/Qwen2.5-7B-Instruct-1M', help='Name of the pre-trained model to use')
+    parser.add_argument('--max_new_tokens', type=int, default=10, help='Maximum number of new tokens to generate')
+    parser.add_argument('--temperature', type=float, default=0.0, help='Temperature for text generation')
+    args = parser.parse_args()
+    
     # transfer to flattened json
-    # flatten_data = json2dicList('./data/test_examples_with_csv.json') 
-    # with open('./data/flattened_test_examples_with_csv.json', 'w') as f:
-    #     json.dump(flatten_data, f)
+    flatten_data = json2dicList(args.data_path) 
+    flatten_data_path = args.data_path.replace('.json', '_flattened.json')
+    with open(flatten_data_path, 'w') as f:
+        json.dump(flatten_data, f)
         
-    json_path = './data/flattened_test_examples_with_csv.json'
-    with open(json_path, 'r') as f:
-        data = json.load(f)
+    # with open(flatten_data_path, 'r') as f:
+    #     flattened_data = json.load(f)
         
     # save prompt label json
     parser = JsonOutputParser(pydantic_object=ResponseSchema)
@@ -77,8 +87,10 @@ if __name__ == "__main__":
         partial_variables={"format_instructions": parser.get_format_instructions()}
     )
     
-    promptDataset = dicList2prompt(data, single_prompt, parser)
-    with open('./data/promptDataset/single_prompted_test_examples.json', 'w') as f:
+    promptDataset = dicList2prompt(flatten_data, single_prompt, parser)
+    file_name = os.path.basename(args.data_path)
+    base_path = os.path.join(os.path.dirname(args.data_path), "promptDataset")
+    with open(os.path.join(base_path, file_name.replace('.json', f'_{args.prompt_type}.json')), 'w') as f:
         json.dump(promptDataset, f)
 
 
