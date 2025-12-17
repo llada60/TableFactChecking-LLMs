@@ -18,41 +18,67 @@ def extract_json(text):
     match = re.search(r'\{.*\}', text, re.S)
     return match.group(0) if match else None
 
-tasks_instructions = [
-    "Your task is to generate one single statement that combines statements A and B using logical AND, such that the resulting statement is true if and only if both A and B are true.",
-    "Your task is to generate one single statement that combines statements A and B using logical OR, such that the resulting statement is true if and only if at least one of A or B is true."]
-
 class StatementSchema(BaseModel):
     new_statement: str
     
-def samples_statement_a_b(samples, task_instructions):
-    """
-    Args:
-        samples (dict): true_statements, false_statements, true_labels, false_labels
-        task_instructions (list): list of task instructions
-    Returns:
-        input_dicts (list): list of input dicts for prompt
-    """
-    # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 0||1, 1||0
-    input_dicts = []
-    for i in range(8):
-        input_dicts.append({
-            "task": task_instructions[i],
-            "original_statement_a": samples["true_statements"][i] if i in [0, 1, 4, 7] else samples["false_statements"][i],
-            "original_statement_b": samples["true_statements"][i] if i%2 == 0 else samples["false_statements"][i],
-        })
-    
-    return input_dicts
+class Sample():
+    def __init__(self, statements, labels, task_instructions):
+        self.statements = statements
+        self.labels = labels
+        self.task_instructions = task_instructions
+        self.true_nums = sum(self.labels)
+        
+    def sample(self):
+        true_statements = self.statements[:self.true_nums]
+        false_statements = self.statements[self.true_nums:]
+        if not len(true_statements) or not len(false_statements): # empty
+            return False
+        # sample 8 statements
+        true_idx = [random.randint(0, len(true_statements) - 1) for _ in range(8)]
+        false_idx = [random.randint(0, len(false_statements) - 1) for _ in range(8)]
+        
+        self.sampled_true_statements = [true_statements[i] for i in true_idx]
+        self.sampled_false_statements = [false_statements[i] for i in false_idx]
+        self.sampled_labels = [self.labels[i] for i in true_idx] + [self.labels[i + self.true_nums] for i in false_idx]
+        return True
+    def samples_statement_a_b(self):
+        """
+        Args:
+            samples (dict): true_statements, false_statements, true_labels, false_labels
+            task_instructions (list): list of task instructions
+        Returns:
+            input_dicts (list): list of input dicts for prompt
+        """
+        # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 0||1, 1||0
+        input_dicts = []
+        sign_label = [(1,1), (1,0), (0,1), (0,0), (1,1), (0,0), (0,1), (1,0)]
+        idx_list = [(0,1), (2,0), (1,3), (2,3), (4,5), (6,4), (5,7), (7,6)]
+        for i in range(8):
+            sign_a, sign_b = sign_label[i]
+            idx_a, idx_b = idx_list[i]
+            input_dicts.append({
+                "task": self.task_instructions[i],
+                "original_statement_a": self.sampled_true_statements[idx_a],
+                "original_statement_b": self.sampled_true_statements[idx_b]
+            })
+        
+        return input_dicts
 
-def samples_labels(samples):
-    labels = []
-    # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 0||1, 1||0
-    for i in range(8):
-        label_a = samples["true_labels"][i] if i in [0, 1, 4, 7] else samples["false_labels"][i]
-        label_b = samples["true_labels"][i] if i%2 == 0 else samples["false_labels"][i]
-        labels.append((label_a and label_b) if i < 4 else (label_a or label_b))
-    
-    return labels
+    def samples_labels(self):
+        labels = []
+        # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 0||1, 1||0
+        sign_label = [(1,1), (1,0), (0,1), (0,0), (1,1), (0,0), (0,1), (1,0)]
+        idx_list = [(0,1), (2,0), (1,3), (2,3), (4,5), (6,4), (5,7), (7,6)]
+        print(len(self.sampled_labels))
+        print(self.true_nums)
+        for i in range(8):
+            sign_a, sign_b = sign_label[i]
+            idx_a, idx_b = idx_list[i]
+            label_a = self.sampled_labels[idx_a] if sign_a == 1 else self.sampled_labels[idx_a + 8]
+            label_b = self.sampled_labels[idx_b] if sign_b == 1 else self.sampled_labels[idx_b + 8]
+            labels.append((label_a and label_b) if i < 4 else (label_a or label_b))
+        
+        return labels
 
 if __name__ == "__main__":
     model_name = "Qwen/Qwen2.5-7B-Instruct-1M"
@@ -92,30 +118,32 @@ if __name__ == "__main__":
     new_data = {}
     tot = 0
     generated_true = 0
+    tasks_instructions = [
+        "Your task is to generate one single statement that combines statements A and B using logical AND, such that the resulting statement is true if and only if both A and B are true.",
+        "Your task is to generate one single statement that combines statements A and B using logical OR, such that the resulting statement is true if and only if at least one of A or B is true."
+        ]
+    task_list = [tasks_instructions[0] for _ in range(4)] + [tasks_instructions[1] for _ in range(4)]
     
     for i, (key, value) in pbar:
         original_statements = value[0]
         original_labels = value[1]
         extend_statements = []
-        true_nums = sum(original_labels)
-        true_statements = original_statements[:true_nums]
-        false_statements = original_statements[true_nums:]
-        # sample 8 statements
-        true_idx = [random.randint(0, len(true_statements) - 1) for _ in range(8)]
-        false_idx = [random.randint(0, len(false_statements) - 1) for _ in range(8)]
-        samples = {
-            "true_statements": [true_statements[i] for i in true_idx],
-            "false_statements": [false_statements[i] for i in false_idx],
-            "true_labels": [original_labels[i] for i in true_idx],
-            "false_labels": [original_labels[i + len(true_statements)] for i in false_idx],
-        }
-        task_list = tasks_instructions[0] * 4 + tasks_instructions[1] * 4
+        
+        sample = Sample(original_statements, original_labels, task_list)
+        if not sample.sample():
+            continue
+        
         # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 1||0, 0||1
-        input_dicts = samples_statement_a_b(samples, task_list)
-        extend_labels = samples_labels(samples)
+        input_dicts = sample.samples_statement_a_b()
+        extend_labels = sample.samples_labels()
+        print(input_dicts)
+        print(extend_labels)
+        continue
+        
         # count labels balance
         generated_true += sum(extend_labels)
         tot += len(extend_labels)
+        
         pbar.set_description(f"Generated true statements ratio: {generated_true}/{tot}")
         
         for input_dict in input_dicts:
