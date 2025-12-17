@@ -33,7 +33,7 @@ def samples_statement_a_b(samples, task_instructions):
     Returns:
         input_dicts (list): list of input dicts for prompt
     """
-    # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 0||1, 1||0, 
+    # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 0||1, 1||0
     input_dicts = []
     for i in range(8):
         input_dicts.append({
@@ -46,15 +46,16 @@ def samples_statement_a_b(samples, task_instructions):
 
 def samples_labels(samples):
     labels = []
+    # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 0||1, 1||0
     for i in range(8):
-        label_a = samples["true_statements"][i] if i in [0, 1, 4, 7] else samples["false_statements"][i]
-        label_b = samples["true_statements"][i] if i%2 == 0 else samples["false_statements"][i]
+        label_a = samples["true_labels"][i] if i in [0, 1, 4, 7] else samples["false_labels"][i]
+        label_b = samples["true_labels"][i] if i%2 == 0 else samples["false_labels"][i]
         labels.append((label_a and label_b) if i < 4 else (label_a or label_b))
     
     return labels
 
 if __name__ == "__main__":
-    model_name = "Qwen/Qwen3-8B"
+    model_name = "Qwen/Qwen2.5-7B-Instruct-1M"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     llm = AutoModelForCausalLM.from_pretrained(model_name)
     hf_pipe = pipeline(
@@ -69,7 +70,7 @@ if __name__ == "__main__":
     hf_llm = HuggingFacePipeline(pipeline=hf_pipe)
     
     data = load_json('./data/test_examples_with_csv.json')
-    pbar = tqdm(enumerate(data.items()))
+    pbar = tqdm(enumerate(data.items()), total=len(data))
     
     parser = JsonOutputParser(pydantic_object=StatementSchema)
     
@@ -89,28 +90,34 @@ if __name__ == "__main__":
     
     chain = prompt | hf_llm
     new_data = {}
+    tot = 0
+    generated_true = 0
     
     for i, (key, value) in pbar:
         original_statements = value[0]
         original_labels = value[1]
         extend_statements = []
-        
-        true_statements = original_statements[:len(original_statements)//2]
-        false_statements = original_statements[len(original_statements)//2:]
+        true_nums = sum(original_labels)
+        true_statements = original_statements[:true_nums]
+        false_statements = original_statements[true_nums:]
         # sample 8 statements
-        true_idx = [random.randint(0, len(true_statements)-1) for _ in range(8)]
-        false_idx = [random.randint(0, len(false_statements)-1) for _ in range(8)]
+        true_idx = [random.randint(0, len(true_statements) - 1) for _ in range(8)]
+        false_idx = [random.randint(0, len(false_statements) - 1) for _ in range(8)]
         samples = {
             "true_statements": [true_statements[i] for i in true_idx],
             "false_statements": [false_statements[i] for i in false_idx],
             "true_labels": [original_labels[i] for i in true_idx],
-            "false_labels": [original_labels[i] for i in false_idx],
+            "false_labels": [original_labels[i + len(true_statements)] for i in false_idx],
         }
         task_list = tasks_instructions[0] * 4 + tasks_instructions[1] * 4
+        # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 1||0, 0||1
         input_dicts = samples_statement_a_b(samples, task_list)
         extend_labels = samples_labels(samples)
+        # count labels balance
+        generated_true += sum(extend_labels)
+        tot += len(extend_labels)
+        pbar.set_description(f"Generated true statements ratio: {generated_true}/{tot}")
         
-        # 1&1, 1&0, 0&1, 0&0, 1||1, 0||0, 1||0, 0||1
         for input_dict in input_dicts:
             result = chain.invoke(input_dict)
             output_text = extract_json(result)
