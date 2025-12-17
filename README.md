@@ -4,6 +4,7 @@
 - The **original TabFact** is in `./data/test_examples_with_csv.json`
 - The **paraphrased TabFact** is in `./data/test_examples_with_csv_paraphrased.json`
 - The **adversarial TabFact** is in `./data/test_examples_with_csv_adversarial.json`
+  
 | Dataset | #Statemetents | #Tables |
 |---------|---------------|---------|
 | Original TabFact | 12779 | 1695 |
