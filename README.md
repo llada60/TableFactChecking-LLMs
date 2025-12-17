@@ -45,17 +45,17 @@ Field descriptions:
 
 Generate paraphrased statements with llm:
 ``` shell
-python src/data_generation/paraphrasing_statements_generation.py --data_path "./data/test_examples_with_csv.json" --output_path "../../data/flattened_test_examples_with_csv_paraphrased.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 512 --temperature 0.7 --batch_size 4
+python src/data_generation/paraphrasing_statements_generation.py --data_path "./data/test_examples_with_csv.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 512 --temperature 0.7 --batch_size 4
 ```
 
 Generate adversarial statements with llm:
 ``` shell
-python src/data_generation/adversarial_statements_generation.py --data_path "./data/test_examples_with_csv.json" --output_path "../../data/flattened_test_examples_with_csv_adversarial.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 512 --temperature 0.7 --batch_size 4
+python src/data_generation/adversarial_statements_generation.py --data_path "./data/test_examples_with_csv.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 512 --temperature 0.7 --batch_size 4
 ```
 
 Generate adversarial statements manually with "AND" and "OR":
 ``` shell
-python src/data_generation/adversarial_statements_generation_manual.py --data_path "../../data/test_examples_with_csv.json" 
+python src/data_generation/adversarial_statements_generation_manual.py --data_path "./data/test_examples_with_csv.json" 
 ```
 
 

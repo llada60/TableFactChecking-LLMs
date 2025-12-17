@@ -38,25 +38,26 @@ class PromptDataset(Dataset):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_path', type=str, default='./data/promptDataset/single_prompted_test_examples.json', help='Path to the input JSON data file')
+    parser.add_argument('--data_path', type=str, default='./data/promptDataset/test_examples_with_csv_paraphrased_direct_prompt.json', help='Path to the input JSON data file')
     parser.add_argument('--model_name', type=str, default='Qwen/Qwen2.5-7B-Instruct-1M', help='Name of the pre-trained model to use')
     parser.add_argument('--max_new_tokens', type=int, default=10, help='Maximum number of new tokens to generate')
     parser.add_argument('--temperature', type=float, default=0.0, help='Temperature for text generation')
     args = parser.parse_args()
     
     model_name = args.model_name
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    llm = AutoModelForCausalLM.from_pretrained(model_name)
-    hf_pipe = pipeline(
-        "text-generation",
-        model=llm,
-        tokenizer=tokenizer,
-        temperature=args.temperature,
-        max_new_tokens=args.max_new_tokens,
-        do_sample=False,
-        return_full_text=False,
-    )
-    hf_llm = HuggingFacePipeline(pipeline=hf_pipe)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left')
+    llm = AutoModelForCausalLM.from_pretrained(model_name).cuda()
+    llm.eval()
+    # hf_pipe = pipeline(
+    #     "text-generation",
+    #     model=llm,
+    #     tokenizer=tokenizer,
+    #     temperature=args.temperature,
+    #     max_new_tokens=args.max_new_tokens,
+    #     do_sample=False,
+    #     return_full_text=False,
+    # )
+    # hf_llm = HuggingFacePipeline(pipeline=hf_pipe)
     
     data = load_json(args.data_path)
     dataset = PromptDataset(data)
@@ -67,16 +68,39 @@ if __name__ == "__main__":
     
     correct = 0
     wrong = 0
-    total = 0
+    total = len(dataset)
     for prompts, labels in pbar:
-        result = hf_llm.generate(prompts)
-        for i in range(len(result.generations)):
-            generation = result.generations[i][0].text
-            parsed = parser.parse(generation)
-            if parsed.answer == labels[i]:
+        prompts = list(prompts)
+        tokens = tokenizer(prompts, return_tensors='pt', padding=True).to(llm.device)
+        outputs = llm.generate(
+            **tokens,
+            max_new_tokens=args.max_new_tokens,
+            temperature=args.temperature,
+            do_sample=False,
+        )
+        results = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        for i, (res, label) in enumerate(zip(results, labels)):
+            res = res[len(prompts[i]):]  
+            json_str = extract_json(res)
+            if json_str is None:
+                continue
+            try:
+                parsed_output = parser.parse(json_str)["answer"]
+            except: 
+                parsed_output = json_str
+            
+            if 'support' in parsed_output.lower():
+                parsed_answer = True
+            elif 'refute' in parsed_output.lower():
+                parsed_answer = False
+            else:
+                continue
+
+            if parsed_answer == label:
                 correct += 1
             else:
                 wrong += 1
-            total += 1
-        pbar.set_description(f"Accuracy: {correct}/{total} = {correct/total:.4f}")
-        
+
+        pbar.set_description(f"Accuracy: {correct}/{total}, Wrong: {wrong}")
+    
+    print(f"Final Accuracy: {correct}/{total}, Wrong: {wrong}")
