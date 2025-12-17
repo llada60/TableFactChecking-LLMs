@@ -1,6 +1,5 @@
 from langchain_core.output_parsers import PydanticOutputParser, JsonOutputParser
 from langchain_core.prompts import PromptTemplate
-from langchain_huggingface import HuggingFacePipeline
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, pipeline
 from torch.utils.data import Dataset, DataLoader
@@ -8,6 +7,7 @@ from torch.utils.data import Dataset, DataLoader
 from pydantic import BaseModel
 from typing import Literal
 from tqdm import tqdm
+import torch
 import json
 import argparse
 import re
@@ -39,29 +39,19 @@ class PromptDataset(Dataset):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, default='./data/promptDataset/test_examples_with_csv_paraphrased_direct_prompt.json', help='Path to the input JSON data file')
-    parser.add_argument('--model_name', type=str, default='Qwen/Qwen2.5-7B-Instruct-1M', help='Name of the pre-trained model to use')
+    parser.add_argument('--model_name', type=str, default='deepseek-ai/DeepSeek-V2-Lite', help='Name of the pre-trained model to use')
     parser.add_argument('--max_new_tokens', type=int, default=10, help='Maximum number of new tokens to generate')
     parser.add_argument('--temperature', type=float, default=0.0, help='Temperature for text generation')
     args = parser.parse_args()
     
     model_name = args.model_name
-    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left')
-    llm = AutoModelForCausalLM.from_pretrained(model_name).cuda()
+    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left', trust_remote_code=True)
+    llm = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True).cuda()
     llm.eval()
-    # hf_pipe = pipeline(
-    #     "text-generation",
-    #     model=llm,
-    #     tokenizer=tokenizer,
-    #     temperature=args.temperature,
-    #     max_new_tokens=args.max_new_tokens,
-    #     do_sample=False,
-    #     return_full_text=False,
-    # )
-    # hf_llm = HuggingFacePipeline(pipeline=hf_pipe)
     
     data = load_json(args.data_path)
     dataset = PromptDataset(data)
-    dataloader = DataLoader(dataset, batch_size=8, shuffle=False)
+    dataloader = DataLoader(dataset, batch_size=4, shuffle=False)
     pbar = tqdm(dataloader, total=len(dataloader))
     
     parser = JsonOutputParser(pydantic_object=ResponseSchema)
@@ -81,6 +71,7 @@ if __name__ == "__main__":
         results = tokenizer.batch_decode(outputs, skip_special_tokens=True)
         for i, (res, label) in enumerate(zip(results, labels)):
             res = res[len(prompts[i]):]  
+            print(res)
             json_str = extract_json(res)
             if json_str is None:
                 continue
