@@ -5,11 +5,11 @@
 - The **paraphrased TabFact** is in `./data/test_examples_with_csv_paraphrased.json`
 - The **adversarial TabFact** is in `./data/test_examples_with_csv_adversarial.json`
   
-| Dataset | #Statemetents | #Tables |
-|---------|---------------|---------|
-| Original TabFact | 12779 | 1695 |
-| Paraphrased TabFact | 12779 | 1695 |
-| Adversarial TabFact | 13560 | 1695 |
+| Dataset | #Statemetents | #Tables | #True Statements |
+|---------|---------------|---------|-----------------|
+| Original TabFact | 12779 | 1695 | 6425 |
+| Paraphrased TabFact | 12779 | 1695 | 6425 |
+| Adversarial TabFact | 10928 | 1366 | 5462 |
 
 The data format is as follows:
 ```json
