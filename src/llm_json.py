@@ -16,6 +16,10 @@ def load_json(file_path):
         data = json.load(f)
     return data
 
+def extract_json(text):
+    match = re.search(r'\{.*\}', text, re.S)
+    return match.group(0) if match else None
+
 class ResponseSchema(BaseModel):
     # reasoning: str
     answer: Literal["Supported", "Refuted"]
@@ -43,8 +47,8 @@ if __name__ == "__main__":
     )
     hf_llm = HuggingFacePipeline(pipeline=hf_pipe)
     
-    datas = load_json(args.data_path)
-    pbar = tqdm(datas.items())
+    data = load_json(args.data_path)
+    pbar = tqdm(data, total=len(data))
     
     parser = JsonOutputParser(pydantic_object=ResponseSchema)
     
@@ -71,36 +75,33 @@ if __name__ == "__main__":
     correct = 0
     wrong = 0
     total = 0
-    for key, value in pbar:
-        statements = value[0]
-        labels = value[1]
-        table_title =value[2]
-        table = value[3]
+    for value in pbar:
         pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
         total += len(statements)
-        for statement, label in zip(statements, labels):
-            result = chain.invoke({
-                "statement": statement,
-                "table_title": table_title,
-                "table": table
-            })
-            try:
-                output_text = parser.parse(result)
-                output_text = output_text['answer']
-            except:
-                output_text = result
-                print("table: ", table)
-                print("Parsing error for statement:", statement)
-                
-            pred = None
-            if(output_text is not None):
-                if "support" in output_text.lower():
-                    pred = True
-                elif "refute" in output_text.lower():
-                    pred = False
-            else: continue
-            if pred == label:
-                correct += 1
-            else:
-                wrong += 1
-    # print(f"Final Accuracy: {correct}/{total}, wrong:{wrong}")
+        label = value["label"]
+        result = chain.invoke({
+            "statement": value["statement"],
+            "table_title": value["table_title"],
+            "table": value["table"]
+        })
+        json_str = extract_json(result)
+        if json_str is None:
+            continue
+        try:
+            parsed_output = parser.parse(json_str)["answer"]
+        except: 
+            parsed_output = json_str
+        
+        if 'support' in parsed_output.lower():
+            parsed_answer = True
+        elif 'refute' in parsed_output.lower():
+            parsed_answer = False
+        else:
+            continue
+
+        if parsed_answer == label:
+            correct += 1
+        else:
+            wrong += 1
+
+    print(f"Final Accuracy: {correct}/{total}, wrong:{wrong}")
