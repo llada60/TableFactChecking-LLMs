@@ -21,6 +21,35 @@ def extract_json(text):
     match = re.search(r'\{.*\}', text, re.S)
     return match.group(0) if match else None
 
+def build_message(statement, table_title, table):
+    messages = [
+        {
+            "role": "system",
+            "content": """
+                You will be provided with a statement and a table. Determine whether the statement is supported or refuted by the information in the table.
+                {format_instructions}""".format(format_instructions=parser.get_format_instructions())
+        },
+        {
+            "role": "assistant",
+            "content": """Please provide me with the statement and the table you are referring to."""
+        },
+        {
+            "role": "user",
+            "content": f"""
+                The table title is {table_title}
+                The table is {table}"""
+        },
+        {
+            "role": "assistant",
+            "content": """Please provide me with the statement you would like to verify using the provided table."""
+        },
+        {
+            "role": "user",
+            "content": f"""The statement is {statement}"""
+        }
+    ]
+    return messages
+
 class ResponseSchema(BaseModel):
     # reasoning: str
     answer: Literal["Supported", "Refuted"]
@@ -40,7 +69,7 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     tokenizer.pad_token = tokenizer.eos_token
     
-    llm = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, device_map="auto",)
+    llm = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True)
     llm.eval()
     
     data = load_json(args.data_path)
@@ -48,38 +77,25 @@ if __name__ == "__main__":
     
     parser = JsonOutputParser(pydantic_object=ResponseSchema)
     
-    # Analyze in one or two sentences and 
-    template = """
-    You will be provided with a statement and a table. Determine whether the statement is supported or refuted by the information in the table.
-    
-    {format_instructions}
-    
-    Statement: {statement}
-    
-    Table Title: {table_title}
-    
-    Table: {table}
-    
-    """
-    prompt = PromptTemplate(
-        template = template,
-        input_variables = ["statement", "table_title", "table"],
-        partial_variables={"format_instructions": parser.get_format_instructions()}
-    )
     correct = 0
     wrong = 0
     total = 0
     for value in pbar:
         total += 1
-        pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
+        # pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
         
         label = value["label"]
-        prompt_text = prompt.format(
+        message_text = build_message(
             statement=value["statement"],
             table_title=value["table_title"],
             table=value["table"]
         )
-        tokens = tokenizer(prompt_text, return_tensors='pt').to(llm.device)
+        prompt = tokenizer.apply_chat_template(
+            message_text,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        tokens = tokenizer(prompt, return_tensors='pt').to(llm.device)
         outputs = llm.generate(
             **tokens,
             max_new_tokens=args.max_new_tokens,
@@ -88,7 +104,7 @@ if __name__ == "__main__":
         )[0][tokens['input_ids'].shape[-1]:]
         result = tokenizer.decode(outputs, skip_special_tokens=True)
         # pbar.set_description(f"{result}")
-        # print(result)
+        print(result)
         json_str = extract_json(result)
         if json_str is None:
             json_str = result

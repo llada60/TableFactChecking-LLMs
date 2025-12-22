@@ -1,0 +1,29 @@
+Job name: ds2-origin
+Namespace(data_path='./data/test_examples_with_csv_flattened.json', model_name='deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct', max_new_tokens=20, temperature=0.0, do_sample=False)
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:09<00:29,  9.71s/it]
+Loading checkpoint shards:  50%|█████     | 2/4 [00:27<00:28, 14.39s/it]
+Loading checkpoint shards:  75%|███████▌  | 3/4 [00:44<00:15, 15.69s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:54<00:00, 13.42s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:54<00:00, 13.64s/it]
+
+  0%|          | 0/12779 [00:00<?, ?it/s]
+acc:0/1, wrong:0:   0%|          | 0/12779 [00:00<?, ?it/s]The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+
+acc:0/1, wrong:0:   0%|          | 0/12779 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/ids/yuhe/tmp/TableFactChecking-LLMs/src/baselines/LLM/llm_json.py", line 83, in <module>
+    outputs = llm.generate(
+  File "/home/ids/yuhe/anaconda3/envs/inf/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/ids/yuhe/anaconda3/envs/inf/lib/python3.10/site-packages/transformers/generation/utils.py", line 2564, in generate
+    result = decoding_method(
+  File "/home/ids/yuhe/anaconda3/envs/inf/lib/python3.10/site-packages/transformers/generation/utils.py", line 2781, in _sample
+    model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
+  File "/home/ids/yuhe/.cache/huggingface/modules/transformers_modules/deepseek_hyphen_ai/DeepSeek_hyphen_Coder_hyphen_V2_hyphen_Lite_hyphen_Instruct/e434a23f91ba5b4923cf6c9d9a238eb4a08e3a11/modeling_deepseek.py", line 1727, in prepare_inputs_for_generation
+    past_length = past_key_values.seen_tokens
+AttributeError: 'DynamicCache' object has no attribute 'seen_tokens'
+srun: error: node52: task 0: Exited with exit code 1
+Job name: ds2-origin

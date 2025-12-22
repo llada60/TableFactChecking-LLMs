@@ -1,17 +1,0 @@
-Job name: llama-origin
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.17s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.43it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.30it/s]
-  0%|          | 0/12779 [00:00<?, ?it/s]The following generation flags are not valid and may be ignored: ['temperature', 'top_p']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 0/12779 [00:19<?, ?it/s]  0%|          | 1/12779 [00:19<70:03:25, 19.74s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 1/12779 [00:39<70:03:25, 19.74s/it]  0%|          | 2/12779 [00:39<69:18:08, 19.53s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 2/12779 [00:58<69:18:08, 19.53s/it]  0%|          | 3/12779 [00:58<68:30:42, 19.31s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 3/12779 [01:16<68:30:42, 19.31s/it]  0%|          | 4/12779 [01:16<67:38:43, 19.06s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 4/12779 [01:37<67:38:43, 19.06s/it]  0%|          | 5/12779 [01:37<69:08:37, 19.49s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 5/12779 [02:00<69:08:37, 19.49s/it]  0%|          | 6/12779 [02:00<73:36:46, 20.75s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 6/12779 [02:22<73:36:46, 20.75s/it]  0%|          | 7/12779 [02:22<75:13:28, 21.20s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 7/12779 [02:41<75:13:28, 21.20s/it]  0%|          | 8/12779 [02:41<72:47:18, 20.52s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 8/12779 [03:00<72:47:18, 20.52s/it]  0%|          | 9/12779 [03:00<71:10:52, 20.07s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-  0%|          | 9/12779 [03:20<71:10:52, 20.07s/it]  0%|          | 10/12779 [03:20<71:01:45, 20.03s/it]Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
-slurmstepd: error: *** JOB 692801 ON node57 CANCELLED AT 2025-12-22T18:18:37 ***
-slurmstepd: error: *** STEP 692801.0 ON node57 CANCELLED AT 2025-12-22T18:18:37 ***
