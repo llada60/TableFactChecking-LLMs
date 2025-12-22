@@ -1,0 +1,39 @@
+Job name: ds-paraphrased
+/home/ids/yuhe/anaconda3/envs/llavaov/lib/python3.10/site-packages/huggingface_hub/file_download.py:945: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:06<00:19,  6.48s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:13<00:13,  6.68s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:20<00:06,  6.90s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:25<00:00,  6.10s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:25<00:00,  6.33s/it]
+  0%|          | 0/12779 [00:00<?, ?it/s]acc:0/1, wrong:0:   0%|          | 0/12779 [00:00<?, ?it/s]/home/ids/yuhe/anaconda3/envs/llavaov/lib/python3.10/site-packages/transformers/generation/configuration_utils.py:392: UserWarning: `do_sample` is set to `False`. However, `temperature` is set to `0.0` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `temperature`.
+  warnings.warn(
+/home/ids/yuhe/anaconda3/envs/llavaov/lib/python3.10/site-packages/transformers/generation/configuration_utils.py:397: UserWarning: `do_sample` is set to `False`. However, `top_p` is set to `0.95` -- this flag is only used in sample-based generation modes. You should set `do_sample=True` or unset `top_p`.
+  warnings.warn(
+Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:0/1, wrong:0:   0%|          | 1/12779 [00:20<71:17:42, 20.09s/it]acc:0/2, wrong:0:   0%|          | 1/12779 [00:20<71:17:42, 20.09s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:0/2, wrong:0:   0%|          | 2/12779 [00:37<66:24:03, 18.71s/it]acc:0/3, wrong:0:   0%|          | 2/12779 [00:37<66:24:03, 18.71s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:0/3, wrong:0:   0%|          | 3/12779 [00:57<67:50:25, 19.12s/it]acc:0/4, wrong:0:   0%|          | 3/12779 [00:57<67:50:25, 19.12s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:0/4, wrong:0:   0%|          | 4/12779 [01:13<64:12:57, 18.10s/it]acc:1/5, wrong:0:   0%|          | 4/12779 [01:13<64:12:57, 18.10s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/5, wrong:0:   0%|          | 5/12779 [01:28<59:03:47, 16.65s/it]acc:1/6, wrong:0:   0%|          | 5/12779 [01:28<59:03:47, 16.65s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/6, wrong:0:   0%|          | 6/12779 [01:41<55:29:36, 15.64s/it]acc:1/7, wrong:0:   0%|          | 6/12779 [01:41<55:29:36, 15.64s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/7, wrong:0:   0%|          | 7/12779 [01:55<53:18:15, 15.02s/it]acc:1/8, wrong:1:   0%|          | 7/12779 [01:55<53:18:15, 15.02s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/8, wrong:1:   0%|          | 8/12779 [02:08<51:31:22, 14.52s/it]acc:1/9, wrong:1:   0%|          | 8/12779 [02:08<51:31:22, 14.52s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/9, wrong:1:   0%|          | 9/12779 [02:22<50:23:55, 14.21s/it]acc:1/10, wrong:1:   0%|          | 9/12779 [02:22<50:23:55, 14.21s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/10, wrong:1:   0%|          | 10/12779 [02:36<50:16:04, 14.17s/it]acc:1/11, wrong:1:   0%|          | 10/12779 [02:36<50:16:04, 14.17s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/11, wrong:1:   0%|          | 11/12779 [02:54<54:45:40, 15.44s/it]acc:1/12, wrong:2:   0%|          | 11/12779 [02:54<54:45:40, 15.44s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/12, wrong:2:   0%|          | 12/12779 [03:12<57:29:00, 16.21s/it]acc:1/13, wrong:3:   0%|          | 12/12779 [03:12<57:29:00, 16.21s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/13, wrong:3:   0%|          | 13/12779 [03:30<58:55:29, 16.62s/it]acc:1/14, wrong:4:   0%|          | 13/12779 [03:30<58:55:29, 16.62s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/14, wrong:4:   0%|          | 14/12779 [03:46<58:15:44, 16.43s/it]acc:1/15, wrong:5:   0%|          | 14/12779 [03:46<58:15:44, 16.43s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/15, wrong:5:   0%|          | 15/12779 [04:02<58:02:50, 16.37s/it]acc:1/16, wrong:5:   0%|          | 15/12779 [04:02<58:02:50, 16.37s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:1/16, wrong:5:   0%|          | 16/12779 [04:20<59:31:36, 16.79s/it]acc:2/17, wrong:5:   0%|          | 16/12779 [04:20<59:31:36, 16.79s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:2/17, wrong:5:   0%|          | 17/12779 [04:38<61:11:31, 17.26s/it]acc:3/18, wrong:5:   0%|          | 17/12779 [04:38<61:11:31, 17.26s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:3/18, wrong:5:   0%|          | 18/12779 [04:57<62:55:09, 17.75s/it]acc:4/19, wrong:5:   0%|          | 18/12779 [04:57<62:55:09, 17.75s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:4/19, wrong:5:   0%|          | 19/12779 [05:14<61:51:32, 17.45s/it]acc:5/20, wrong:5:   0%|          | 19/12779 [05:14<61:51:32, 17.45s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:5/20, wrong:5:   0%|          | 20/12779 [05:30<60:56:30, 17.19s/it]acc:5/21, wrong:6:   0%|          | 20/12779 [05:30<60:56:30, 17.19s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:5/21, wrong:6:   0%|          | 21/12779 [05:57<70:51:37, 20.00s/it]acc:5/22, wrong:6:   0%|          | 21/12779 [05:57<70:51:37, 20.00s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:5/22, wrong:6:   0%|          | 22/12779 [06:19<73:27:40, 20.73s/it]acc:5/23, wrong:6:   0%|          | 22/12779 [06:19<73:27:40, 20.73s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:5/23, wrong:6:   0%|          | 23/12779 [06:42<75:01:44, 21.17s/it]acc:5/24, wrong:6:   0%|          | 23/12779 [06:42<75:01:44, 21.17s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:5/24, wrong:6:   0%|          | 24/12779 [07:03<75:42:00, 21.37s/it]acc:5/25, wrong:6:   0%|          | 24/12779 [07:03<75:42:00, 21.37s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:5/25, wrong:6:   0%|          | 25/12779 [07:26<76:42:19, 21.65s/it]acc:5/26, wrong:6:   0%|          | 25/12779 [07:26<76:42:19, 21.65s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:5/26, wrong:6:   0%|          | 26/12779 [07:48<76:59:19, 21.73s/it]acc:5/27, wrong:6:   0%|          | 26/12779 [07:48<76:59:19, 21.73s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+acc:5/27, wrong:6:   0%|          | 27/12779 [08:12<80:01:09, 22.59s/it]acc:5/28, wrong:6:   0%|          | 27/12779 [08:12<80:01:09, 22.59s/it]Setting `pad_token_id` to `eos_token_id`:100001 for open-end generation.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 690849 ON node51 CANCELLED AT 2025-12-20T10:52:20 ***

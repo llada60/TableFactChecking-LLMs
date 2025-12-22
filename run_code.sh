@@ -14,6 +14,6 @@ conda activate inf
 echo "Job name: $SLURM_JOB_NAME"
 
 # Execute the Python scjobjobript with specific arguments
-srun python src/llm_json.py --data_path ./data/test_examples_with_csv_adversarial_flattened.json --model_name Qwen/Qwen2.5-7B-Instruct-1M
+srun python src/baselines/LLM/llm_json.py --data_path ./data/test_examples_with_csv_adversarial_flattened.json 
 
 echo "Job name: $SLURM_JOB_NAME"
