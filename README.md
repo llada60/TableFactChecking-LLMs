@@ -3,16 +3,22 @@
 ## Running
 
 ### LLM
-#### Serial
+#### Serial_prompt
 
 ``` shell
 python src/baselines/LLM/llm_json.py --data_path "./data/flattened_test_examples_with_csv_paraphrased.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 10 --temperature 0.0
 ```
 
-#### Parallel
+#### Parallel_prompt
 
 ``` shell
 python src/baselines/LLM/llm_parallel.py --data_path "./data/prompteDataset/test_examples_with_csv_direct_prompt.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 10 --temperature 0.0
+```
+
+#### Chat_mode
+
+``` shell
+python src/baselines/LLM/llm_json_chat.py --data_path "./data/flattened_test_examples_with_csv_paraphrased.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 10 --temperature 0.0
 ```
 
 ## Dataset
@@ -43,6 +49,32 @@ Field descriptions:
 - `labels`(List[int]): labels corresponding to each statement, either 0 (False) or 1 (True)
 - `table_title`(string): title of the table
 - `table`(string): CSV formatted table content
+
+## Baselines
+
+### LLM-based Methods
+
+#### Trying Different Prompting Methods
+1. **Direct Prompting**: Use direct prompts to query LLMs for fact-checking.
+2. **Chat mode**: Use chat-based prompts to interact with LLMs for fact-checking.
+
+#### Evaluating Different LLMs
+
+Direct Prompting evaluated on the following LLMs:
+
+1. `Qwen/Qwen2.5-7B-Instruct-1M`
+
+2. `togethercomputer/Llama-2-7B-32K-Instruct`
+
+3. `deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct`
+
+Chat mode evaluated on the following LLMs:
+
+1. `Qwen/Qwen2.5-7B-Instruct-1M`
+
+2. `meta-llama/Llama-2-7b-chat-hf`
+
+3. `deepseek-ai/DeepSeek-V2-Lite-Chat`
 
 ## Data Preprocessing
 
