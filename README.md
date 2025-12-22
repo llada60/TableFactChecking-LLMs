@@ -2,7 +2,6 @@
 
 ## Running
 
-<<<<<<< HEAD
 ### LLM
 #### Serial
 
@@ -14,16 +13,6 @@ python src/baselines/LLM/llm_json.py --data_path "./data/flattened_test_examples
 
 ``` shell
 python src/baselines/LLM/llm_parallel.py --data_path "./data/prompteDataset/test_examples_with_csv_direct_prompt.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 10 --temperature 0.0
-=======
-### Serial
-``` shell
-python src/llm_json.py --data_path "./data/flattened_test_examples_with_csv_paraphrased.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 10 --temperature 0.0
-```
-
-### Parallel
-``` shell
-python src/llm_parallel.py --data_path "./data/prompteDataset/test_examples_with_csv_direct_prompt.json" --model_name "Qwen/Qwen2.5-7B-Instruct-1M" --max_new_tokens 10 --temperature 0.0
->>>>>>> 522ef75a5fe76ce31d77bad8a922bd29d89be985
 ```
 
 ## Dataset
