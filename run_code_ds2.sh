@@ -9,7 +9,7 @@
 
 # Activate the environment
 source ~/anaconda3/etc/profile.d/conda.sh
-conda activate inf
+conda activate ds
 
 echo "Job name: $SLURM_JOB_NAME"
 

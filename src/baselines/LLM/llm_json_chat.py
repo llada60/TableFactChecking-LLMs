@@ -45,7 +45,7 @@ def build_message(statement, table_title, table):
         },
         {
             "role": "user",
-            "content": f"""The statement is {statement}"""
+            "content": f"""The statement is {statement}. Please determine whether the statement is Supported or Refuted by the table."""
         }
     ]
     return messages
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     tokenizer.pad_token = tokenizer.eos_token
     
-    llm = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True)
+    llm = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, device_map='auto')
     llm.eval()
     
     data = load_json(args.data_path)
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     total = 0
     for value in pbar:
         total += 1
-        # pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
+        pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
         
         label = value["label"]
         message_text = build_message(
@@ -104,7 +104,8 @@ if __name__ == "__main__":
         )[0][tokens['input_ids'].shape[-1]:]
         result = tokenizer.decode(outputs, skip_special_tokens=True)
         # pbar.set_description(f"{result}")
-        print(result)
+        # print(result, flush=True)
+        
         json_str = extract_json(result)
         if json_str is None:
             json_str = result

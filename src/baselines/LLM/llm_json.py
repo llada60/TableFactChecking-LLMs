@@ -71,7 +71,7 @@ if __name__ == "__main__":
     total = 0
     for value in pbar:
         total += 1
-        pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
+        # pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
         
         label = value["label"]
         prompt_text = prompt.format(
@@ -88,7 +88,7 @@ if __name__ == "__main__":
         )[0][tokens['input_ids'].shape[-1]:]
         result = tokenizer.decode(outputs, skip_special_tokens=True)
         # pbar.set_description(f"{result}")
-        # print(result)
+        print(result)
         json_str = extract_json(result)
         if json_str is None:
             json_str = result
