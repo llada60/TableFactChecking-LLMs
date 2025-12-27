@@ -1,0 +1,3 @@
+question_id	id	annotator	position	answer_coordinates	answers	gold_cls	pred_cls	logits_cls
+0-0_0	0	0	0	[]	[]	0	1	12.468974
+0-0_1	0	0	1	[]	[]	0	1	11.818203
