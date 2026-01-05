@@ -1,6 +1,5 @@
 from langchain_core.output_parsers import PydanticOutputParser, JsonOutputParser
 from langchain_core.prompts import PromptTemplate
-from langchain_huggingface import HuggingFacePipeline
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, pipeline
 
