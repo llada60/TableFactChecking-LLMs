@@ -76,6 +76,12 @@ Chat mode evaluated on the following LLMs:
 
 3. `deepseek-ai/DeepSeek-V2-Lite-Chat`
 
+### TAPAS
+
+Reference to the github repo: https://github.com/google-research/tapas/tree/master?tab=readme-ov-file
+
+`tapas_tabfact_inter_masklm_large_reset.zip`
+
 ## Data Preprocessing
 
 ### 1. Generate paraphrasing and adversarial statements

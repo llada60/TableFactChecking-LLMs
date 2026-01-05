@@ -48,25 +48,33 @@ if __name__ == "__main__":
     data = load_json(args.data_path)
     pbar = tqdm(data, total=len(data))
     
-    parser = JsonOutputParser(pydantic_object=ResponseSchema)
-    
     # Analyze in one or two sentences and 
     template = """
-    You will be provided with a statement and a table. Determine whether the statement is supported or refuted by the information in the table.
-    
-    {format_instructions}
-    
+    You are a binary fact-checking classifier.
+
+    Decide whether the statement is Supported or Refuted by the table.
+
+    STRICT OUTPUT RULES (must follow):
+    - Output exactly one token: Supported OR Refuted
+    - No reasoning, no explanation, no extra words
+    - No punctuation, no quotes, no markdown, no newlines
+    - Do not use external knowledge except the table provided
+    - If the table does not clearly support the statement, output Refuted
+
     Statement: {statement}
-    
+
     Table Title: {table_title}
-    
-    Table: {table}
-    
+
+    Table:
+    {table}
+
+    Answer:
     """
+
+
     prompt = PromptTemplate(
         template = template,
-        input_variables = ["statement", "table_title", "table"],
-        partial_variables={"format_instructions": parser.get_format_instructions()}
+        input_variables = ["statement", "table_title", "table"]
     )
     correct = 0
     wrong = 0
@@ -90,20 +98,13 @@ if __name__ == "__main__":
         )[0][tokens['input_ids'].shape[-1]:]
         result = tokenizer.decode(outputs, skip_special_tokens=True)
         pbar.set_description(f"{result}")
-        # print(result)
-        json_str = extract_json(result)
-        if json_str is None:
-            json_str = result
-        try:
-            parsed_output = parser.parse(json_str)["answer"]
-        except: 
-            parsed_output = json_str
-        
-        if 'support' in parsed_output.lower():
+
+        if 'support' in result.lower():
             parsed_answer = True
-        elif 'refute' in parsed_output.lower():
+        elif 'refute' in result.lower():
             parsed_answer = False
         else:
+            print(result)
             continue
 
         if parsed_answer == label:
