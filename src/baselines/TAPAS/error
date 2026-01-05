@@ -1,0 +1,79 @@
+2025-12-26 19:09:18.333530: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudart64_101.dll'; dlerror: cudart64_101.dll not found
+2025-12-26 19:09:18.334313: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+WARNING:tensorflow:From e:\miniconda3\envs\tapas_py37\lib\site-packages\tensorflow\python\compat\v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+I1226 19:09:20.890974 18408 run_task_main.py:156] is_built_with_cuda: True
+2025-12-26 19:09:20.891183: I tensorflow/core/platform/cpu_feature_guard.cc:143] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2025-12-26 19:09:20.897275: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x198292a77f0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2025-12-26 19:09:20.897774: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2025-12-26 19:09:20.900144: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library nvcuda.dll
+2025-12-26 19:09:20.915640: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 4070 Laptop GPU computeCapability: 8.9
+coreClock: 1.98GHz coreCount: 36 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 238.45GiB/s
+2025-12-26 19:09:20.916815: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudart64_101.dll'; dlerror: cudart64_101.dll not found
+2025-12-26 19:09:20.917730: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cublas64_10.dll'; dlerror: cublas64_10.dll not found
+2025-12-26 19:09:20.918656: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cufft64_10.dll'; dlerror: cufft64_10.dll not found
+2025-12-26 19:09:20.919412: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'curand64_10.dll'; dlerror: curand64_10.dll not found
+2025-12-26 19:09:20.920304: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cusolver64_10.dll'; dlerror: cusolver64_10.dll not found
+2025-12-26 19:09:20.921107: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cusparse64_10.dll'; dlerror: cusparse64_10.dll not found
+2025-12-26 19:09:20.921883: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudnn64_7.dll'; dlerror: cudnn64_7.dll not found
+2025-12-26 19:09:20.922218: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1598] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2025-12-26 19:09:20.990067: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102] Device interconnect StreamExecutor with strength 1 edge matrix:
+2025-12-26 19:09:20.990390: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1108]      0 
+2025-12-26 19:09:20.990578: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] 0:   N 
+2025-12-26 19:09:20.992372: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x198292a8870 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2025-12-26 19:09:20.992770: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): NVIDIA GeForce RTX 4070 Laptop GPU, Compute Capability 8.9
+I1226 19:09:20.993278 18408 run_task_main.py:156] is_gpu_available: False
+2025-12-26 19:09:20.993740: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 4070 Laptop GPU computeCapability: 8.9
+coreClock: 1.98GHz coreCount: 36 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 238.45GiB/s
+2025-12-26 19:09:20.995006: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudart64_101.dll'; dlerror: cudart64_101.dll not found
+2025-12-26 19:09:20.995802: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cublas64_10.dll'; dlerror: cublas64_10.dll not found
+2025-12-26 19:09:20.996597: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cufft64_10.dll'; dlerror: cufft64_10.dll not found
+2025-12-26 19:09:20.997377: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'curand64_10.dll'; dlerror: curand64_10.dll not found
+2025-12-26 19:09:20.998173: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cusolver64_10.dll'; dlerror: cusolver64_10.dll not found
+2025-12-26 19:09:20.998917: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cusparse64_10.dll'; dlerror: cusparse64_10.dll not found
+2025-12-26 19:09:20.999661: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudnn64_7.dll'; dlerror: cudnn64_7.dll not found
+2025-12-26 19:09:20.999995: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1598] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+I1226 19:09:20.999745 18408 run_task_main.py:156] GPUs: []
+I1226 19:09:20.999745 18408 run_task_main.py:156] Training or predicting ...
+I1226 19:09:21.350753 18408 modeling.py:486] position: Tensor("bert/embeddings/ExpandDims:0", shape=(1, 512), dtype=int32)
+I1226 19:09:21.353736 18408 modeling.py:488] batched_position: Tensor("bert/embeddings/Repeat/Reshape:0", shape=(?, 512), dtype=int32)
+I1226 19:09:21.354721 18408 modeling.py:489] token_type_ids: Tensor("IteratorGetNext:2", shape=(?, 512), dtype=int32)
+2025-12-26 19:09:23.536227: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 4070 Laptop GPU computeCapability: 8.9
+coreClock: 1.98GHz coreCount: 36 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 238.45GiB/s
+2025-12-26 19:09:23.537721: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudart64_101.dll'; dlerror: cudart64_101.dll not found
+2025-12-26 19:09:23.538533: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cublas64_10.dll'; dlerror: cublas64_10.dll not found
+2025-12-26 19:09:23.539279: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cufft64_10.dll'; dlerror: cufft64_10.dll not found
+2025-12-26 19:09:23.540010: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'curand64_10.dll'; dlerror: curand64_10.dll not found
+2025-12-26 19:09:23.540761: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cusolver64_10.dll'; dlerror: cusolver64_10.dll not found
+2025-12-26 19:09:23.541580: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cusparse64_10.dll'; dlerror: cusparse64_10.dll not found
+2025-12-26 19:09:23.542362: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudnn64_7.dll'; dlerror: cudnn64_7.dll not found
+2025-12-26 19:09:23.542834: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1598] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2025-12-26 19:09:23.543702: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102] Device interconnect StreamExecutor with strength 1 edge matrix:
+2025-12-26 19:09:23.543996: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1108]      0 
+2025-12-26 19:09:23.544179: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] 0:   N 
+I1226 19:09:25.985065 18408 modeling.py:486] position: Tensor("bert/embeddings/ExpandDims:0", shape=(1, 512), dtype=int32)
+I1226 19:09:25.988050 18408 modeling.py:488] batched_position: Tensor("bert/embeddings/Repeat/Reshape:0", shape=(?, 512), dtype=int32)
+I1226 19:09:25.988050 18408 modeling.py:489] token_type_ids: Tensor("IteratorGetNext:2", shape=(?, 512), dtype=int32)
+2025-12-26 19:09:28.166526: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1561] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: NVIDIA GeForce RTX 4070 Laptop GPU computeCapability: 8.9
+coreClock: 1.98GHz coreCount: 36 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 238.45GiB/s
+2025-12-26 19:09:28.167726: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudart64_101.dll'; dlerror: cudart64_101.dll not found
+2025-12-26 19:09:28.168714: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cublas64_10.dll'; dlerror: cublas64_10.dll not found
+2025-12-26 19:09:28.169814: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cufft64_10.dll'; dlerror: cufft64_10.dll not found
+2025-12-26 19:09:28.170843: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'curand64_10.dll'; dlerror: curand64_10.dll not found
+2025-12-26 19:09:28.171592: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cusolver64_10.dll'; dlerror: cusolver64_10.dll not found
+2025-12-26 19:09:28.172334: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cusparse64_10.dll'; dlerror: cusparse64_10.dll not found
+2025-12-26 19:09:28.173103: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudnn64_7.dll'; dlerror: cudnn64_7.dll not found
+2025-12-26 19:09:28.173447: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1598] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2025-12-26 19:09:28.174274: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102] Device interconnect StreamExecutor with strength 1 edge matrix:
+2025-12-26 19:09:28.174586: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1108]      0 
+2025-12-26 19:09:28.174769: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] 0:   N 
+I1226 19:09:32.605798 18408 run_task_main.py:156] Evaluation finished after training step 0.
