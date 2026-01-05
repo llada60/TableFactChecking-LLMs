@@ -14,6 +14,6 @@ conda activate llama2
 echo "Job name: $SLURM_JOB_NAME"
 
 # Execute the Python scjobjobript with specific arguments
-srun python src/baselines/LLM/llm_json.py --data_path ./data/test_examples_with_csv_flattened.json --model_name togethercomputer/Llama-2-7B-32K-Instruct --max_new_tokens 50
+srun python src/baselines/LLM/llm_single_ans.py --data_path ./data/test_examples_with_csv_flattened.json --model_name togethercomputer/Llama-2-7B-32K-Instruct --max_new_tokens 10
 
 echo "Job name: $SLURM_JOB_NAME"

@@ -1,4 +1,3 @@
-from pyexpat import model
 from langchain_core.output_parsers import PydanticOutputParser, JsonOutputParser
 from langchain_core.prompts import PromptTemplate
 
@@ -10,7 +9,6 @@ from tqdm import tqdm
 import json
 import argparse
 import re
-import torch
 
 
 def load_json(file_path):
@@ -21,6 +19,44 @@ def load_json(file_path):
 def extract_json(text):
     match = re.search(r'\{.*\}', text, re.S)
     return match.group(0) if match else None
+
+def build_message(statement, table_title, table):
+    messages = [
+        {
+            "role": "system",
+            "content": """
+                You are a binary fact-checking classifier.
+
+                Decide whether the statement is Supported or Refuted by the table.
+
+                STRICT OUTPUT RULES (must follow):
+                - Output exactly one token: Supported OR Refuted
+                - No reasoning, no explanation, no extra words
+                - No punctuation, no quotes, no markdown, no newlines
+                - Do not use external knowledge except the table provided
+                - If the table does not clearly support the statement, output Refuted
+                """
+        },
+        {
+            "role": "assistant",
+            "content": """Please provide me with the statement and the table you are referring to."""
+        },
+        {
+            "role": "user",
+            "content": f"""
+                The table title is {table_title}
+                The table is {table}"""
+        },
+        {
+            "role": "assistant",
+            "content": """Please provide me with the statement you would like to verify using the provided table."""
+        },
+        {
+            "role": "user",
+            "content": f"""The statement is {statement}. Please determine whether the statement is Supported or Refuted by the table."""
+        }
+    ]
+    return messages
 
 class ResponseSchema(BaseModel):
     # reasoning: str
@@ -41,42 +77,14 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     tokenizer.pad_token = tokenizer.eos_token
     
-    llm = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, device_map = {"": 0})
-    llm.generation_config = GenerationConfig.from_pretrained(model_name)
-    llm.generation_config.pad_token_id = llm.generation_config.eos_token_id
+    llm = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, device_map='auto')
     llm.eval()
     
     data = load_json(args.data_path)
     pbar = tqdm(data, total=len(data))
     
-    # Analyze in one or two sentences and 
-    template = """
-    You are a binary fact-checking classifier.
-
-    Decide whether the statement is Supported or Refuted by the table.
-
-    STRICT OUTPUT RULES (must follow):
-    - Output exactly one token: Supported OR Refuted
-    - No reasoning, no explanation, no extra words
-    - No punctuation, no quotes, no markdown, no newlines
-    - Do not use external knowledge except the table provided
-    - If the table does not clearly support the statement, output Refuted
-
-    Statement: {statement}
-
-    Table Title: {table_title}
-
-    Table:
-    {table}
-
-    Answer:
-    """
-
-
-    prompt = PromptTemplate(
-        template = template,
-        input_variables = ["statement", "table_title", "table"]
-    )
+    parser = JsonOutputParser(pydantic_object=ResponseSchema)
+    
     correct = 0
     wrong = 0
     total = 0
@@ -85,29 +93,33 @@ if __name__ == "__main__":
         pbar.set_description(f"acc:{correct}/{total}, wrong:{wrong}")
         
         label = value["label"]
-        prompt_text = prompt.format(
+        message_text = build_message(
             statement=value["statement"],
             table_title=value["table_title"],
             table=value["table"]
         )
-        tokens = tokenizer(prompt_text, return_tensors='pt').to(llm.device)
-        with torch.no_grad():
-            outputs = llm.generate(
-                **tokens,
-                max_new_tokens=args.max_new_tokens,
-                do_sample=args.do_sample,
-                temperature=args.temperature,   
-                use_cache=False,
-            )[0][tokens['input_ids'].shape[-1]:]
+        prompt = tokenizer.apply_chat_template(
+            message_text,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        tokens = tokenizer(prompt, return_tensors='pt').to(llm.device)
+        outputs = llm.generate(
+            **tokens,
+            max_new_tokens=args.max_new_tokens,
+            do_sample=args.do_sample,
+            temperature=args.temperature,   
+        )[0][tokens['input_ids'].shape[-1]:]
         result = tokenizer.decode(outputs, skip_special_tokens=True)
         # pbar.set_description(f"{result}")
-
+        # print(result, flush=True)
+        
+        
         if 'refute' in result.lower():
             parsed_answer = False
         elif 'support' in result.lower():
             parsed_answer = True
         else:
-            print(result)
             continue
 
         if parsed_answer == label:
