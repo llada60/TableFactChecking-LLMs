@@ -115,4 +115,4 @@ if __name__ == "__main__":
         else:
             wrong += 1
 
-    print(f"Final Accuracy: {correct}/{total}, wrong:{wrong}")
+    print(f"Final Accuracy: {correct/total}, correct: {correct}, wrong: {wrong}, none: {total - correct - wrong}")
